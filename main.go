@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/teamhide/hfive_go/core"
 	"github.com/teamhide/hfive_go/users"
 )
 
 func main() {
 	r := gin.Default()
+	core.Init()
 
 	users := new(users.UserController)
 	v1 := r.Group("/v1/users")
