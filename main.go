@@ -13,7 +13,7 @@ func main() {
 	users := new(users.UserController)
 	v1 := r.Group("/v1/users")
 	{
-		v1.GET("/", users.RegisterDefaultUser)
+		v1.POST("/", users.RegisterDefaultUser)
 		v1.GET("/google/login", users.GoogleLogin)
 		v1.GET("/kakao/login", users.KakaoLogin)
 		v1.POST("/refresh", users.RefreshToken)
