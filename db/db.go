@@ -14,7 +14,7 @@ const (
 	DbName     = "hfive"
 )
 
-var DB *gorm.DB
+var db *gorm.DB
 
 func Init() {
 	db, err := gorm.Open("postgres", "host="+DbHost+" port="+DbPort+" user="+DbUser+" dbname="+DbName+" password="+DbPassword+" sslmode=disable")
@@ -22,4 +22,8 @@ func Init() {
 		log.Fatal(err.Error())
 	}
 	defer db.Close()
+}
+
+func GetDB() *gorm.DB {
+	return db
 }
