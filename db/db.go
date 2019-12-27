@@ -33,7 +33,6 @@ func Init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	defer db.Close()
 }
 
 func GetDB() *gorm.DB {
