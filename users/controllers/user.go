@@ -19,6 +19,10 @@ func (u UserController) RegisterDefaultUser(c *gin.Context) {
 		return
 	}
 
-	u.RegisterUserUsecase("padocon@naver.com", "123", "123")
-	c.JSON(http.StatusOK, gin.H{"status": true})
+	status, err := u.RegisterUserUsecase(form.Email, form.Password1, form.Password2)
+	if status == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": status})
 }
