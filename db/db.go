@@ -4,30 +4,24 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
+	"github.com/teamhide/hfive_go/configs"
 	"log"
-)
-
-const (
-	DbHost     = "localhost"
-	DbPort     = "5432"
-	DbUser     = "hfive"
-	DbPassword = "hfive"
-	DbName     = "hfive"
 )
 
 var db *gorm.DB
 var err error
 
 func Init() {
+	config := configs.GetConfiguration()
 	db, err = gorm.Open(
 		"postgres",
 		fmt.Sprintf(
 			"host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-			DbHost,
-			DbPort,
-			DbUser,
-			DbName,
-			DbPassword,
+			config.DbHost,
+			config.DbPort,
+			config.DbUser,
+			config.DbName,
+			config.DbPassword,
 		),
 	)
 	if err != nil {

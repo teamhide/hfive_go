@@ -30,18 +30,18 @@ func (u UserUsecase) RegisterUserUsecase(email, password1, password2 string) (bo
 	return true, nil
 }
 
-func (u UserUsecase) GoogleLoginUsecase() (bool, error) {
-	return true, nil
+func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
+	return "", nil
 }
 
-func (u UserUsecase) KakaoLoginUsecase() (bool, error) {
-	return true, nil
+func (u UserUsecase) KakaoLoginUsecase(code string) (string, error) {
+	return "", nil
 }
 
-func (u UserUsecase) RefreshTokenUsecase() (bool, error) {
-	return true, nil
+func (u UserUsecase) RefreshTokenUsecase(token, refreshToken string) (string, error) {
+	return "", nil
 }
 
-func (u UserUsecase) VerifyTokenUsecase() (bool, error) {
+func (u UserUsecase) VerifyTokenUsecase(token string) (bool, error) {
 	return true, nil
 }
