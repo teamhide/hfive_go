@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
-	"github.com/teamhide/hfive_go/users"
 	"log"
 )
 
@@ -20,7 +19,7 @@ var db *gorm.DB
 var err error
 
 func Init() {
-	db, err := gorm.Open(
+	db, err = gorm.Open(
 		"postgres",
 		fmt.Sprintf(
 			"host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
@@ -34,7 +33,6 @@ func Init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	db.AutoMigrate(&users.User{})
 	defer db.Close()
 }
 
