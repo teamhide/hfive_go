@@ -26,3 +26,19 @@ func (u UserController) RegisterDefaultUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"status": status})
 }
+
+func (u UserController) GoogleLogin(c *gin.Context) {
+
+}
+
+func (u UserController) KakaoLogin(c *gin.Context) {
+
+}
+
+func (u UserController) RefreshToken(c *gin.Context) {
+
+}
+
+func (u UserController) VerifyToken(c *gin.Context) {
+
+}
