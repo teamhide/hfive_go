@@ -6,6 +6,14 @@ import (
 	"github.com/teamhide/gin_boilerplate/models"
 )
 
+type UserUsecase interface {
+	RegisterUserUsecase(email, password1, password2 string) (bool, error)
+	GoogleLoginUsecase(code string) (string, string)
+	KakaoLoginUsecase(code string) (string, string)
+	RefreshTokenUsecase(token string, refreshToken string) string
+	VerifyTokenUsecase(token string) bool
+}
+
 func RegisterUserUsecase(email, password1, password2 string) (bool, error) {
 	db := db.GetDB()
 	var user models.User
