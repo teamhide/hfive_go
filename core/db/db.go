@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
-	"github.com/teamhide/hfive_go/configs"
+	"github.com/teamhide/hfive_go/core/configs"
 	"log"
 )
 

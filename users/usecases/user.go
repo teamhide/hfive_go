@@ -3,7 +3,7 @@ package usecases
 import (
 	"errors"
 
-	"github.com/teamhide/hfive_go/db"
+	"github.com/teamhide/hfive_go/core/db"
 	"github.com/teamhide/hfive_go/users/models"
 )
 

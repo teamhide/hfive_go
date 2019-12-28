@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/teamhide/hfive_go/db"
+	"github.com/teamhide/hfive_go/core/db"
 	"github.com/teamhide/hfive_go/routers"
 )
 

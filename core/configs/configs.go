@@ -1,6 +1,8 @@
 package configs
 
-import "os"
+import (
+	"os"
+)
 
 func getEnv(key, defaultValue string) string {
 	value := os.Getenv(key)
@@ -11,11 +13,12 @@ func getEnv(key, defaultValue string) string {
 }
 
 type Configuration struct {
-	DbHost     string
-	DbPort     string
-	DbUser     string
-	DbPassword string
-	DbName     string
+	DbHost       string
+	DbPort       string
+	DbUser       string
+	DbPassword   string
+	DbName       string
+	JwtSecretKey string
 }
 
 func GetConfiguration() Configuration {
@@ -25,5 +28,6 @@ func GetConfiguration() Configuration {
 	config.DbUser = getEnv("DB_USER", "hfive")
 	config.DbPassword = getEnv("DB_PASSWORD", "hfive")
 	config.DbName = getEnv("DB_NAME", "hfive")
+	config.JwtSecretKey = getEnv("JWT_SECRET_KEY", "hfive")
 	return config
 }
