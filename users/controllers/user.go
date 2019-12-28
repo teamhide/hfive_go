@@ -29,7 +29,7 @@ func (u UserController) RegisterDefaultUser(c *gin.Context) {
 
 func (u UserController) GoogleLogin(c *gin.Context) {
 	code := c.Query("code")
-	token, _ := u.GoogleLoginUsecase(code)
+	token, err := u.GoogleLoginUsecase(code)
 
 	if len(token) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

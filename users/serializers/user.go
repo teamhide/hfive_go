@@ -6,12 +6,17 @@ type RegisterDefaultUserRequest struct {
 	Password2 string `form:"password2" json:"password2" xml:"password2" binding:"required"`
 }
 
-type RegisterDefaultUserResponse struct {
-	ID    string `form:"id" json:"id" xml:"id" binding:"required"`
-	Email string `form:"email" json:"email" xml:"email"  binding:"required"`
-}
-
 type RefreshTokenRequest struct {
 	Token        string `form:"token" json:"token" xml:"token"  binding:"required"`
 	RefreshToken string `form:"refresh_token" json:"refresh_token" xml:"refresh_token"  binding:"required"`
+}
+
+type RegisterDefaultUserResponse struct {
+	ID    string `json:"id" binding:"required"`
+	Email string `json:"email" binding:"required"`
+}
+
+type OAuthLoginResponse struct {
+	Token        string `json:"token" binding:"required"`
+	RefreshToken string `json:"refresh_token" binding:"required"`
 }

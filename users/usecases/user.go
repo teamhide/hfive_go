@@ -13,6 +13,7 @@ import (
 	"github.com/teamhide/hfive_go/core/configs"
 	"github.com/teamhide/hfive_go/core/db"
 	"github.com/teamhide/hfive_go/users/models"
+	"github.com/teamhide/hfive_go/users/serializers"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,11 +58,11 @@ func (u UserUsecase) RegisterUserUsecase(email, password1, password2 string) (st
 	return tokenString, nil
 }
 
-func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
+func (u UserUsecase) GoogleLoginUsecase(code string) (serializers.OAuthLoginResponse, error) {
 	db := db.GetDB()
 	oAuthConfig := configs.GetOAuthConfig()
+	serializer := serializers.OAuthLoginResponse{}
 
-	Get access_token and id_token
 	body := map[string]string{
 		"grant_type":    "authorization_code",
 		"code":          code,
@@ -72,12 +73,12 @@ func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
 	requestBody, _ := json.Marshal(body)
 	res, err := http.Post("https://www.googleapis.com/oauth2/v4/token", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-		return "", errors.New("fetch google api error")
+		return serializer, errors.New("fetch google api error")
 	}
 	resBody, err := ioutil.ReadAll(res.Body)
 	jsonBody := map[string]interface{}{}
 	if err := json.Unmarshal([]byte(resBody), &jsonBody); err != nil {
-		return "", errors.New("fetch google api error")
+		return serializer, errors.New("fetch google api error")
 	}
 	googleAccessToken := fmt.Sprintf("%v", jsonBody["access_token"])
 	idToken := fmt.Sprintf("%v", jsonBody["id_token"])
@@ -85,12 +86,12 @@ func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
 	// Get email from id_token
 	res, err = http.Get("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
 	if err != nil {
-		return "", errors.New("get email error")
+		return serializer, errors.New("get email error")
 	}
 	resBody, err = ioutil.ReadAll(res.Body)
 	jsonBody = map[string]interface{}{}
 	if err := json.Unmarshal([]byte(resBody), &jsonBody); err != nil {
-		return "", errors.New("get email error")
+		return serializer, errors.New("get email error")
 	}
 	email := fmt.Sprintf("%v", jsonBody["email"])
 
@@ -111,9 +112,11 @@ func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
 	// 	"exp": time.Now().Add(time.Hour * time.Duration(24)).Unix(),
 	// })
 	jwtTokenString, err := jwtToken.SignedString([]byte("hfive"))
+	serializer.Token = jwtTokenString
+	serializer.RefreshToken = "abc"
 
 	defer res.Body.Close()
-	return jwtTokenString, nil
+	return serializer, nil
 }
 
 func (u UserUsecase) KakaoLoginUsecase(code string) (string, error) {
