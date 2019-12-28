@@ -9,5 +9,9 @@ func Init(r *gin.Engine) {
 	v1 := r.Group("/v1/users")
 	{
 		v1.POST("/", users.RegisterDefaultUser)
+		v1.GET("/oauth/google", users.GoogleLogin)
+		v1.GET("/oauth/kakao", users.KakaoLogin)
+		v1.POST("/refresh", users.RefreshToken)
+		v1.POST("/verify", users.VerifyToken)
 	}
 }
