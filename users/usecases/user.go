@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -56,7 +58,10 @@ func (u UserUsecase) RegisterUserUsecase(email, password1, password2 string) (st
 }
 
 func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
+	db := db.GetDB()
 	oAuthConfig := configs.GetOAuthConfig()
+
+	Get access_token and id_token
 	body := map[string]string{
 		"grant_type":    "authorization_code",
 		"code":          code,
@@ -64,14 +69,51 @@ func (u UserUsecase) GoogleLoginUsecase(code string) (string, error) {
 		"client_secret": oAuthConfig.GoogleClientSecret,
 		"redirect_uri":  oAuthConfig.GoogleRedirectUrl,
 	}
-	jsonBody, _ := json.Marshal(body)
-	res, err := http.Post("https://www.googleapis.com/oauth2/v4/token", "text/plain", bytes.NewBuffer(jsonBody))
+	requestBody, _ := json.Marshal(body)
+	res, err := http.Post("https://www.googleapis.com/oauth2/v4/token", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return "", errors.New("fetch google api error")
 	}
+	resBody, err := ioutil.ReadAll(res.Body)
+	jsonBody := map[string]interface{}{}
+	if err := json.Unmarshal([]byte(resBody), &jsonBody); err != nil {
+		return "", errors.New("fetch google api error")
+	}
+	googleAccessToken := fmt.Sprintf("%v", jsonBody["access_token"])
+	idToken := fmt.Sprintf("%v", jsonBody["id_token"])
+
+	// Get email from id_token
+	res, err = http.Get("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
+	if err != nil {
+		return "", errors.New("get email error")
+	}
+	resBody, err = ioutil.ReadAll(res.Body)
+	jsonBody = map[string]interface{}{}
+	if err := json.Unmarshal([]byte(resBody), &jsonBody); err != nil {
+		return "", errors.New("get email error")
+	}
+	email := fmt.Sprintf("%v", jsonBody["email"])
+
+	// Create User
+	userModel := models.User{}
+	userModel.Email = email
+	userModel.LoginType = "Google"
+	userModel.AccessToken = googleAccessToken
+	db.Create(&userModel)
+
+	// Create token and update it to user
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": userModel.ID,
+		"exp":     time.Now().Add(time.Hour * time.Duration(1)).Unix(),
+	})
+	// jwtRefreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+	// 	"sub": "refresh",
+	// 	"exp": time.Now().Add(time.Hour * time.Duration(24)).Unix(),
+	// })
+	jwtTokenString, err := jwtToken.SignedString([]byte("hfive"))
 
 	defer res.Body.Close()
-	return "", nil
+	return jwtTokenString, nil
 }
 
 func (u UserUsecase) KakaoLoginUsecase(code string) (string, error) {

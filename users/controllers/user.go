@@ -28,8 +28,8 @@ func (u UserController) RegisterDefaultUser(c *gin.Context) {
 }
 
 func (u UserController) GoogleLogin(c *gin.Context) {
-	code := c.Param("code")
-	token, err := u.GoogleLoginUsecase(code)
+	code := c.Query("code")
+	token, _ := u.GoogleLoginUsecase(code)
 
 	if len(token) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -39,7 +39,7 @@ func (u UserController) GoogleLogin(c *gin.Context) {
 }
 
 func (u UserController) KakaoLogin(c *gin.Context) {
-	code := c.Param("code")
+	code := c.Query("code")
 	token, err := u.KakaoLoginUsecase(code)
 
 	if len(token) == 0 {
