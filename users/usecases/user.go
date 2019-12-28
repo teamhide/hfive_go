@@ -16,7 +16,7 @@ type UserUsecase struct {
 
 func (u UserUsecase) RegisterUserUsecase(email, password1, password2 string) (string, error) {
 	db := db.GetDB()
-	config := configs.GetConfiguration()
+	config := configs.GetConfig()
 	userModel := models.User{}
 
 	if password1 != password2 {

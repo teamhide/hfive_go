@@ -13,7 +13,7 @@ var db *gorm.DB
 var err error
 
 func Init() {
-	config := configs.GetConfiguration()
+	config := configs.GetConfig()
 	db, err = gorm.Open(
 		"postgres",
 		fmt.Sprintf(
