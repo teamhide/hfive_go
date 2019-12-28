@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 	"github.com/teamhide/hfive_go/core/configs"
+	"github.com/teamhide/hfive_go/users/models"
 	"log"
 )
 
@@ -27,6 +28,7 @@ func Init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	db.AutoMigrate(&models.User{})
 }
 
 func GetDB() *gorm.DB {

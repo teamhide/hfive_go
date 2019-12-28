@@ -19,12 +19,12 @@ func (u UserController) RegisterDefaultUser(c *gin.Context) {
 		return
 	}
 
-	status, err := u.RegisterUserUsecase(form.Email, form.Password1, form.Password2)
-	if status == false {
+	token, err := u.RegisterUserUsecase(form.Email, form.Password1, form.Password2)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": status})
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }
 
 func (u UserController) GoogleLogin(c *gin.Context) {
